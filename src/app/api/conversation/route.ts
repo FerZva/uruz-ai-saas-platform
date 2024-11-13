@@ -7,17 +7,6 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-function isAxiosError(
-  error: unknown
-): error is { response: { status: number } } {
-  return (
-    typeof error === "object" &&
-    error !== null &&
-    "response" in error &&
-    typeof (error as any).response?.status === "number"
-  );
-}
-
 export async function POST(Req: Request) {
   try {
     const { userId } = await auth();
@@ -43,7 +32,11 @@ export async function POST(Req: Request) {
 
     return NextResponse.json(response.choices[0]?.message?.content);
   } catch (error: unknown) {
-    if (isAxiosError(error) && error.response.status === 429) {
+    if (
+      error instanceof Error &&
+      "response" in error &&
+      (error as { response?: { status?: number } }).response?.status === 429
+    ) {
       return new NextResponse(
         "API rate limit exceeded. Please try again later.",
         { status: 429 }

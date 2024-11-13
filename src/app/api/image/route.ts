@@ -38,7 +38,7 @@ export async function POST(Req: Request) {
     });
 
     return NextResponse.json(response.data[0].url);
-  } catch (error: unknown) {
+  } catch (error) {
     if (
       error instanceof Error &&
       "response" in error &&

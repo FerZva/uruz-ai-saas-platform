@@ -31,7 +31,7 @@ export async function POST(Req: Request) {
     });
 
     return NextResponse.json(response.choices[0]?.message?.content);
-  } catch (error: unknown) {
+  } catch (error) {
     if (
       error instanceof Error &&
       "response" in error &&

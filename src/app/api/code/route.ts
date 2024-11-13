@@ -7,6 +7,17 @@ type ChatCompletionRequestMessage = {
   content: string;
 };
 
+function isAxiosError(
+  error: unknown
+): error is { response: { status: number } } {
+  return (
+    typeof error === "object" &&
+    error !== null &&
+    "response" in error &&
+    typeof (error as any).response?.status === "number"
+  );
+}
+
 // Crear una instancia de OpenAI
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -43,17 +54,10 @@ export async function POST(Req: Request) {
 
     return NextResponse.json(response.choices[0]?.message?.content);
   } catch (error: unknown) {
-    if (
-      typeof error === "object" &&
-      error !== null &&
-      "response" in error &&
-      (error as any).response?.status === 429
-    ) {
+    if (isAxiosError(error) && error.response.status === 429) {
       return new NextResponse(
         "API rate limit exceeded. Please try again later.",
-        {
-          status: 429,
-        }
+        { status: 429 }
       );
     }
     console.log("[CODE_ERROR]", error);

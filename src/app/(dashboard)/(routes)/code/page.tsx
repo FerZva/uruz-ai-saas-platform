@@ -47,9 +47,13 @@ const CodePage = () => {
       setMessages((current) => [...current, userMessage, response.data]);
 
       form.reset();
-    } catch (error: any) {
+    } catch (error: unknown) {
       // TODO: Open Pro Modal
-      console.log(error);
+      if (axios.isAxiosError(error)) {
+        console.log(error);
+      } else {
+        console.log("An unexpected error occurred:", error);
+      }
     } finally {
       router.refresh();
     }

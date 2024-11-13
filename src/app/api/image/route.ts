@@ -17,10 +17,6 @@ export async function POST(Req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    if (!openai.apiKey) {
-      return new NextResponse("OpenAI API Key not configured", { status: 500 });
-    }
-
     if (!prompt) {
       return new NextResponse("Prompt are required", { status: 400 });
     }

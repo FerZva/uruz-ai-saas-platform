@@ -38,14 +38,19 @@ export async function POST(Req: Request) {
     });
 
     return NextResponse.json(response.data[0].url);
-  } catch (error: any) {
-    if (error?.response?.status === 429) {
+  } catch (error: unknown) {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "response" in error &&
+      (error as any).response?.status === 429
+    ) {
       return new NextResponse(
         "API rate limit exceeded. Please try again later.",
         { status: 429 }
       );
     }
-    console.log("[IMAGE_ERROR]", error);
+    console.log("[CODE_ERROR]", error);
     return new NextResponse("Internal error", { status: 500 });
   }
 }

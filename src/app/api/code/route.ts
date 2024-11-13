@@ -42,11 +42,18 @@ export async function POST(Req: Request) {
     });
 
     return NextResponse.json(response.choices[0]?.message?.content);
-  } catch (error: any) {
-    if (error?.response?.status === 429) {
+  } catch (error: unknown) {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "response" in error &&
+      (error as any).response?.status === 429
+    ) {
       return new NextResponse(
         "API rate limit exceeded. Please try again later.",
-        { status: 429 }
+        {
+          status: 429,
+        }
       );
     }
     console.log("[CODE_ERROR]", error);

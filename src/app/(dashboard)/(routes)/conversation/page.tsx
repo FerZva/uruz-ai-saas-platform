@@ -46,9 +46,10 @@ const ConversationPage = () => {
       setMessages((current) => [...current, userMessage, response.data]);
 
       form.reset();
-    } catch (error: any) {
-      // TODO: Open Pro Modal
-      console.log(error);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        console.log(error);
+      }
     } finally {
       router.refresh();
     }

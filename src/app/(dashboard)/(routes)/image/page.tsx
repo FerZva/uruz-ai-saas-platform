@@ -45,7 +45,7 @@ const ImagePage = () => {
 
       setImages(urls);
       form.reset();
-    } catch (error: any) {
+    } catch (error: unknown) {
       // TODO: Open Pro Modal
       console.log(error);
     } finally {
